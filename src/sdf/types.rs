@@ -1,12 +1,5 @@
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Debug)]
-pub struct DualContouringMesh {
-    pub size: u32,
-    pub bounding_box: Vec3,
-    pub sdf: SdfTree,
-}
-
 #[derive(Component, Default, Clone, Debug)]
 pub struct SdfTree {
     pub nodes: Vec<SDFNode>,
