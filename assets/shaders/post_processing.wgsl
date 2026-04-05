@@ -52,19 +52,20 @@ fn detect_depth_edges(uv: vec2<f32>, texel_size: vec2<f32>) -> f32 {
     let down  = get_depth(uv + vec2<f32>(0.0, -texel_size.y));
 
     // Calculate the absolute difference
-    let diff = (abs(left - center) + abs(right - center) + abs(up - center) + abs(down - center))/4.;
+    let diff = abs(left - center) + abs(right - center) + abs(up - center) + abs(down - center);
 
     // Threshold determines sensitivity. 
     // Since depth is non-linear, a very small value is usually needed.
-    let threshold = 0.8;
+    let threshold = 0.004;
     
-    return 1. - step(0.001, diff);
+    return 1. - step(threshold, diff);
 }
 
 @fragment
 fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
-    let uv = pixelize_uvs(in.uv, 300);
-    let texel = 1./300.;
+    let resolution = 300.;
+    let uv = pixelize_uvs(in.uv, resolution);
+    let texel = 1./resolution;
     let depth = textureSample(depth_texture, texture_sampler, uv);
     let outline = detect_depth_edges(uv, vec2(texel, texel));
     let primitive_color = textureSample(screen_texture, texture_sampler, uv);
